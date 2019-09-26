@@ -1,4 +1,4 @@
-package com.example.sockets;
+//package com.example.sockets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-
 public class SampleSocketClient {
 	Socket server;
 	public SampleSocketClient() {
@@ -41,8 +40,16 @@ public class SampleSocketClient {
 						break;
 					}
 					line = "";
+					String fromServer = in.readLine();
+					if(fromServer != null) {
+						System.out.println("Reply from server: " + fromServer);
+					}
+					else {
+						System.out.println("Server disconnected");
+						break;
+					}
 				}
-				catch(Exception e) {
+				catch(IOException e) {
 					System.out.println("Connection dropped");
 					break;
 				}
@@ -68,7 +75,18 @@ public class SampleSocketClient {
 	}
 	public static void main(String[] args) {
 		SampleSocketClient client = new SampleSocketClient();
-		client.connect("127.0.0.1", 3002);
+		int port = 3322;
+		try{
+			//not safe but try-catch will get it
+			port = Integer.parseInt(args[0]);
+		}
+		catch(Exception e){
+			System.out.println("Invalid port");
+		}
+		if(port == -1){
+			return;
+		}
+		client.connect("127.0.0.1", port);
 		try {
 			//if start is private, it's valid here since this main is part of the class
 			client.start();

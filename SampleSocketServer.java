@@ -1,4 +1,4 @@
-package com.example.sockets;
+//package com.example.sockets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,9 +8,8 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 public class SampleSocketServer {
-	int port = 3002;
+	int port = 3322;
 	public SampleSocketServer() {
 	}
 	private void start(int port) {
@@ -24,12 +23,18 @@ public class SampleSocketServer {
 			String fromClient = "";
 			String toClient = "";
 			while ((fromClient = in.readLine()) != null) {
+				System.out.println("From client: " + fromClient);
+				List<String> reversedInput = Arrays.asList(fromClient.split(""));
+				Collections.reverse(reversedInput);
+				toClient = String.join("", reversedInput);
+				System.out.println("Sending to client: " + toClient);
+
 				if ("kill server".equalsIgnoreCase(fromClient)) {
-					System.out.println("Client killed server");
+					out.println("Server received kill command, disconnecting");
 					break;
 				}
 				else {
-					System.out.println("From client: " + fromClient);
+					out.println(toClient);
 				}
 			}
 		} catch (IOException e) {
@@ -42,11 +47,12 @@ public class SampleSocketServer {
 			}
 		}
 	}
-
 	public static void main(String[] arg) {
 		System.out.println("Starting Server");
 		SampleSocketServer server = new SampleSocketServer();
-		server.start(3002);
+		server.start(3322);
 		System.out.println("Server Stopped");
 	}
 }
+
+
