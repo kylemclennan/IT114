@@ -1,59 +1,92 @@
-package Sockets4;
-
-import java.awt.Color;
-import java.awt.Graphics;
-
-public class Ball {
-	double xVel,yVel,x,y;
-	public Ball(){
-		x = 350;
-		y=250;
-		xVel = getRandomSpeed() * getRandomDirection();
-		yVel = getRandomSpeed() * getRandomDirection();
-	}
-	public double getRandomSpeed() {
-		return(Math.random() * 3 + 2);
-	}
-	public int getRandomDirection() {
-		int rand = (int)(Math.random() * 2);
-		if(rand == 1) {
-			return 1;
-		}
-		else {
-			return -1;
-		}
-	}
-	public void draw(Graphics g) {
-		g.setColor(Color.white);
-		g.fillOval((int)x-10,(int)y-10 , 20, 20);
-	}
-	public void checkPaddleCollision(Paddle p1, Paddle p2) {
-		if(x <=50) {
-			if(y >= p1.getY() && y <= p1.getY()+80) {
-				xVel = -xVel;
-			}
-		}
-		else if (x >= 650) {
-			if(y >= p2.getY() && y <= p2.getY()+80) {
-				xVel = -xVel;
-				}
-		}
-	}
-	public void move() {
-		x += xVel;
-		y+= yVel;
+package PongGame;
+public class Ball extends Thread{
+	private int x;			 
+	private int y;			 
+	private double xv;       
+	private double yv;      
+	private int radius;		
+	private int HEIGHT;
+	private int WIDTH;
+	
+	@Override
+	public void run() {
+		while(true){
+		move();
+		try {
+			sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
 		
-		if(y <10) {
-			yVel = -yVel;
-		}
-		if(y>490) {
-			yVel = -yVel;
-		}
 	}
+	public Ball(int x, int y, double xv, double yv, int radius, int WIDTH, int HEIGHT) {
+		super();
+		this.x = x;
+		this.y = y;
+		this.xv = xv;
+		this.yv = yv;
+		this.radius = radius;
+		this.WIDTH = WIDTH;
+		this.HEIGHT = HEIGHT;
+	}
+ 
+
+	public void move(){
+		if(x + xv > (WIDTH-radius) - 7){ 
+			x= (WIDTH-radius)-7; 
+			xv = xv * -1;
+
+		}
+		
+		if(x + xv < 9){ 
+			x = 9;
+			xv = xv *-1;
+		}
+		
+		if(y + yv < radius/2+7){ 
+			y = 29;
+			yv = yv * -1;
+		}
+		
+		if(y + yv > (HEIGHT - radius) - 6) 
+		{
+			y = (HEIGHT-radius)-6; 
+			yv = yv * -1;
+			
+		}
+		x += xv;
+		y += yv;
+
+	}	
 	public int getX() {
-		return (int)x;
+		return x;
+	}
+	public void setX(int x) {
+		this.x = x;
 	}
 	public int getY() {
-		return (int)y;
+		return y;
 	}
-}
+	public void setY(int y) {
+		this.y = y;
+	}
+	public double getXv() {
+		return xv;
+	}
+	public void setXv(double xv) {
+		this.xv = xv;
+	}
+	public double getYv() {
+		return yv;
+	}
+	public void setYv(double yv) {
+		this.yv = yv;
+	}
+	public int getRadius() {
+		return radius;
+	}
+	public void setRadius(int radius) {
+		this.radius = radius;
+	}
+
+	}
